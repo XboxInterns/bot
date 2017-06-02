@@ -1,0 +1,44 @@
+
+{
+  "name": "MixerBot",
+  "version": "0.13.0",
+  "description": "Client library for interacting with the beam API.",
+  "main": "index.js",
+  "typings": "index.d.ts",
+  "scripts": {
+    "test": "node node_modules/mocha/bin/mocha test/unit --recursive && npm run lint",
+    "cover": "istanbul cover _mocha -- test/unit --recursive",
+    "lint": "eslint .",
+    "prepublish": "npm run test"
+  },
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/WatchBeam/beam-client-node.git"  //!!! dk if we're allowed to use this
+  },
+  "keywords": [
+    "beam",
+    "client",
+    "api",
+    "library",
+    "oauth"
+  ],
+  "homepage": "https://github.com/WatchBeam/beam-client-node",  //!!! dk if we're allowed to use this
+  "devDependencies": {
+    "chai": "^3.5.0",
+    "chai-subset": "^1.2.0",
+    "eslint": "^3.0.1",
+    "eslint-config-airbnb-base": "^4.0.0",
+    "eslint-plugin-import": "^1.10.2",
+    "istanbul": "^0.4.3",
+    "mocha": "^3.0.0",
+    "sinon": "^1.14.0",
+    "sinon-chai": "^2.8.0",
+    "typings": "^1.0.4"
+  },
+  "dependencies": {
+    "bluebird": "^3.1.1",
+    "lodash": "^4.0.0",
+    "request": "^2.53.0",
+    "ws": "^1.0.1"
+  }
+}
