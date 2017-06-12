@@ -68,7 +68,7 @@ function createChatSocket (userId, channelId, endpoints, authkey) {
                 socket.call('msg', [`@${data.user_name} lost...`]);
             }
             console.log(`Spin game with ${data.user_name}`);
-        } else if (data.message.message[0].data.toLowerCase().startsWith('!spin')) {
+        } else {
             socket.call('msg', [`@${data.user_name} please enter a valid number to bet`]);
         }
     });
