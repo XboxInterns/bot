@@ -9,7 +9,7 @@ const client = new XClient();
 // the required information to all of our requests after this call.
 client.use('oauth', {
     tokens: {
-        access: '3CjdkNpRU5OKO99mE0wVm3fNwsfLftpQFlTv750s2uEF8wfQCUY4DyoUSXQzIRAn',
+        access: 'kn7IfCBlsHASvATqRwhkap2y82cpKO2nSNBVMBl5ww5XfCb2KjlNDEGdgFR2vGe0',
         expires: Date.now() + (365 * 24 * 60 * 60 * 1000)
     },
 });
@@ -18,11 +18,14 @@ client.use('oauth', {
 client.request('GET', `users/current`)
     .then(response => {
         userInfo = response.body;
-        return client.chat.join(response.body.channel.id);
+        //before: response.userInfo.channelId
+        //now: hardcoded xboxinterns channelId
+        return client.chat.join(6772196);
     })
     .then(response => {
         const body = response.body;
-        return createChatSocket(userInfo.id, userInfo.channel.id, body.endpoints, body.authkey);
+        //channel id has to be xboxinterns - hardcoded
+        return createChatSocket(userInfo.id, 6772196, body.endpoints, body.authkey);
     })
     .catch(error => {
         console.log('Something went wrong:', error);
