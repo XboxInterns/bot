@@ -58,10 +58,12 @@ function createChatSocket (userId, channelId, endpoints, authkey) {
             console.log(`Ponged ${data.user_name}`);
         }
 
+      if (input[0] == '!spin' && isNaN(input[1])) {
+        socket.call('msg', [`@${data.user_name} please enter a valid number`]);
+      }
 
        if (input[0] == '!spin' && !isNaN(input[1])) {
         // result = a number between -input[1] and +input[1]
-
         if (Math.random() > 0) {          // 50/50 chance of winning
           socket.call('msg', [`@${data.user_name} won ${input[1]} points!`]);
         } else {
@@ -69,9 +71,7 @@ function createChatSocket (userId, channelId, endpoints, authkey) {
         }
       }
 
-      if (input[0] == '!spin' && isNaN(input[1])) {
-         socket.call('msg', [`@${data.user_name} please enter a valid number`]);
-       }
+
     });
 
 
