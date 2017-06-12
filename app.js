@@ -57,6 +57,19 @@ function createChatSocket (userId, channelId, endpoints, authkey) {
       socket.call('msg', [`@${data.user_name} PONG!`])
       console.log(`Ponged ${data.user_name}`)
     }
+    if(input[0] == '!what') {
+      socket.call('msg', ['Hey! We\'re three Xbox Interns - Andy, Dani, and Tanvi! We\'re new to Mixer and to PUBG. Check !rules to see what the rules of our chat are :) and !commandlist to see InternXBot\'s list of commands!'])
+    }
+      if(input[0] == '!rules') {
+          socket.call('msg', ['1. Be nice \n2. No profanity \n3. If you don\'t follow 1 & 2 we can fire you (ban you) from the stream. \n4. Be chill fam'])
+      }
+
+      if(input[0] == '!commandlist') {
+       socket.call('msg', ['Here\'s a list of my current commands: !what, !rules, !twitter, !ping, !dadjoke, !spin - Check back for more!'])
+      }
+      if(input[0] == '!twitter') {
+          socket.call('msg',['Follow the interns on twitter: twitter.com/xboxinterns Follow our bots at twitter.com/MixerInternBot !'])
+      }
 
     if (input[0] == '!spin' && isNaN(input[1])) {
       socket.call('msg', [`@${data.user_name} please enter a valid number`])
@@ -72,7 +85,7 @@ function createChatSocket (userId, channelId, endpoints, authkey) {
     }
 
     if(input[0] == '!dadjoke') {
-      randomLine('/Users/t-anpark/Desktop/bot/dadjokes.txt')
+      randomLine('/Users/t-tabajp/Documents/GitHub/bot/dadjokes.txt') //change this according to your machine
       socket.call('msg', [`@${data.user_name} ${line}`])
     }
   })
