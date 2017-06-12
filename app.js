@@ -2,7 +2,7 @@ const XClient = require('beam-client-node')
 const XSocket = require('beam-client-node/lib/ws')
 var fs = require('fs');
 let userInfo
-
+var qSet = new Set();
 const client = new XClient()
 
 // With OAuth we don't need to login, the OAuth Provider will attach
@@ -75,6 +75,12 @@ function createChatSocket (userId, channelId, endpoints, authkey) {
       randomLine('/Users/t-anpark/Desktop/bot/dadjokes.txt')
       socket.call('msg', [`@${data.user_name} ${line}`])
     }
+
+    if(input[0] == '!q') {
+      // below pushes the entire message including the '!q'
+      qSet.add(data.message.message[0].data);
+      getQuestions(); // !!! delete this since it'll repeatedly print the questions
+    }
   })
 
   // Handle errors
@@ -99,3 +105,8 @@ function randomLine(fileName) {
   })
 }
 
+function getQuestions() {
+  for(let i of qSet) {
+    console.log(i);
+  }
+}
