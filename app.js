@@ -56,6 +56,23 @@ function createChatSocket (userId, channelId, endpoints, authkey) {
         }
     });
 
+    socket.on('ChatMessage', data => {
+        var input = data.message.message[1];
+        if (data.message.message[0].data.toLowerCase().startsWith('!spin') && !isNaN(input)) {
+
+            // result = a number between -input and +input
+            var result = Math.random() * 2 * input - input;
+            if (result >= 0) {
+                socket.call('msg', [`@${data.user_name} won ${input} points!`]);
+            } else {
+                socket.call('msg', [`@${data.user_name} lost...`]);
+            }
+            console.log(`Spin game with ${data.user_name}`);
+        } else if (data.message.message[0].data.toLowerCase().startsWith('!spin')) {
+            socket.call('msg', [`@${data.user_name} please enter a valid number to bet`]);
+        }
+    });
+
     // Handle errors
     socket.on('error', error => {
         console.error('Socket error', error);
@@ -67,3 +84,4 @@ function createChatSocket (userId, channelId, endpoints, authkey) {
             return socket.call('msg', ['Hi! I\'m pingbot! Write !ping and I will pong back!']);
         });
 }
+
