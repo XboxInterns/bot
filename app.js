@@ -20,12 +20,12 @@ client.request('GET', `users/current`)
         userInfo = response.body;
         //before: response.userInfo.channelId
         //now: hardcoded xboxinterns channelId
-        return client.chat.join(6772196);
+        return client.chat.join(6725743);
     })
     .then(response => {
         const body = response.body;
         //channel id has to be xboxinterns - hardcoded
-        return createChatSocket(userInfo.id, 6772196, body.endpoints, body.authkey);
+        return createChatSocket(userInfo.id, 6725743, body.endpoints, body.authkey);
     })
     .catch(error => {
         console.log('Something went wrong:', error);
@@ -64,10 +64,12 @@ function createChatSocket (userId, channelId, endpoints, authkey) {
 
        if (input[0] == '!spin' && !isNaN(input[1])) {
         // result = a number between -input[1] and +input[1]
-        if (Math.random() > 0) {          // 50/50 chance of winning
-          socket.call('msg', [`@${data.user_name} won ${input[1]} points!`]);
+        if (Math.random() > Math.random()) {
+            console.log(input[1]);
+            var winnings = (Math.random() *  parseInt(input[1])) + parseInt(input[1]);
+            socket.call('msg', [`@${data.user_name} won ${Math.round(winnings)} points!`]);
         } else {
-          socket.call('msg', [`@${data.user_name} lost...`]);
+            socket.call('msg', [`@${data.user_name} lost the spin...`]);
         }
       }
 
