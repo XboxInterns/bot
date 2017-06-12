@@ -9,7 +9,7 @@ const client = new XClient();
 // the required information to all of our requests after this call.
 client.use('oauth', {
     tokens: {
-        access: 'cUbq78omtrfgWtulBqSjCFRz1b3BlWAIomoMlVK6aND7wYuCSgIQNWo5hsNcWkKD',
+        access: '3CjdkNpRU5OKO99mE0wVm3fNwsfLftpQFlTv750s2uEF8wfQCUY4DyoUSXQzIRAn',
         expires: Date.now() + (365 * 24 * 60 * 60 * 1000)
     },
 });
