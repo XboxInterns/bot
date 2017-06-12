@@ -54,25 +54,27 @@ function createChatSocket (userId, channelId, endpoints, authkey) {
             socket.call('msg', [`@${data.user_name} PONG!`]);
             console.log(`Ponged ${data.user_name}`);
         }
-    });
 
-    socket.on('ChatMessage', data => {
-        var input = data.message.message[1].data;
-        if (data.message.message[0].data.toLowerCase().startsWith('!spin') && !isNaN(input)) {
+      var input = data.message.message[1].data;
+      var isNum = /^\d+$/.test(input);
+      if (data.message.message[0].data.toLowerCase().startsWith('!spin') && isNum) {
 
-            // result = a number between -input and +input
-            var result = Math.random() * 2 * input - input;
-            if (result >= 0) {
-                socket.call('msg', [`@${data.user_name} won ${input} points!`]);
-            } else {
-                socket.call('msg', [`@${data.user_name} lost...`]);
-            }
+        // result = a number between -input and +input
+        var result = Math.random() * 2 * input - input;
+        if (result >= 0) {
+          socket.call('msg', [`@${data.user_name} won ${input} points!`]);
         } else {
-            socket.call('msg', [`@${data.user_name} please enter a valid number to bet`]);
+          socket.call('msg', [`@${data.user_name} lost...`]);
         }
         console.log(input);
-         console.log(`Spin game with ${data.user_name}`);
+      } else {
+        socket.call('msg', [`@${data.user_name} please enter a valid number to bet`]);
+        console.log(`Spin game with ${data.user_name} -> lost`);
+      }
+
+
     });
+
 
     // Handle errors
     socket.on('error', error => {
