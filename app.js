@@ -57,7 +57,7 @@ function createChatSocket (userId, channelId, endpoints, authkey) {
     });
 
     socket.on('ChatMessage', data => {
-        var input = data.message.message[1];
+        var input = data.message.message[1].data;
         if (data.message.message[0].data.toLowerCase().startsWith('!spin') && !isNaN(input)) {
 
             // result = a number between -input and +input
@@ -67,10 +67,11 @@ function createChatSocket (userId, channelId, endpoints, authkey) {
             } else {
                 socket.call('msg', [`@${data.user_name} lost...`]);
             }
-            console.log(`Spin game with ${data.user_name}`);
         } else {
             socket.call('msg', [`@${data.user_name} please enter a valid number to bet`]);
         }
+        console.log(input);
+         console.log(`Spin game with ${data.user_name}`);
     });
 
     // Handle errors
