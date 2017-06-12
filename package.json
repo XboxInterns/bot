@@ -1,4 +1,3 @@
-
 {
   "name": "MixerBot",
   "version": "0.13.0",
@@ -13,7 +12,7 @@
   },
   "repository": {
     "type": "git",
-    "url": "https://github.com/WatchBeam/beam-client-node.git"  //!!! dk if we're allowed to use this
+    "url": "https://github.com/WatchBeam/beam-client-node.git"
   },
   "keywords": [
     "beam",
@@ -22,7 +21,7 @@
     "library",
     "oauth"
   ],
-  "homepage": "https://github.com/WatchBeam/beam-client-node",  //!!! dk if we're allowed to use this
+  "homepage": "https://github.com/WatchBeam/beam-client-node",
   "devDependencies": {
     "chai": "^3.5.0",
     "chai-subset": "^1.2.0",
@@ -36,6 +35,7 @@
     "typings": "^1.0.4"
   },
   "dependencies": {
+    "beam-client-node": "^0.13.0",
     "bluebird": "^3.1.1",
     "lodash": "^4.0.0",
     "request": "^2.53.0",

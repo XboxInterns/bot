@@ -15,6 +15,7 @@ client.use('oauth', {
 });
 
 // Get's the user we have access to with the token
+//my dudes does this work
 client.request('GET', `users/current`)
     .then(response => {
         userInfo = response.body;
