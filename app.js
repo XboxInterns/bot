@@ -67,7 +67,9 @@ function createChatSocket (userId, channelId, endpoints, authkey) {
         } else {
           socket.call('msg', [`@${data.user_name} lost...`]);
         }
-      } else {
+      }
+
+      if (input[0] == '!spin' && isNaN(input[1])) {
          socket.call('msg', [`@${data.user_name} please enter a valid number`]);
        }
     });
