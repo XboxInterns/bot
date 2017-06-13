@@ -97,7 +97,7 @@ function createChatSocket (userId, channelId, endpoints, authkey) {
 
         if(opt === '!dieroll') {
             //socket.call('msg', [`@${data.user_name} rolls a die...`])
-            var n = Math.floor(Math.random() * 6) + 1;
+            let n = Math.floor(Math.random() * 6) + 1;
             if (n === 1) {
                 socket.call('msg', [`@${data.user_name} rolls a die... The result of the die roll is: 1`])
             } else if(n === 2) {
@@ -109,10 +109,10 @@ function createChatSocket (userId, channelId, endpoints, authkey) {
             else if(n === 4) {
                 socket.call('msg', [`@${data.user_name} rolls a die... The result of the die roll is: 4`])
             }
-            else if(n ==5) {
+            else if(n === 5) {
                 socket.call('msg', [`@${data.user_name} rolls a die... The result of the die roll is: 5`])
             }
-            else if(n == 6) {
+            else if(n === 6) {
                 socket.call('msg', [`@${data.user_name} rolls a die... The result of the die roll is: 6`])
             }
 
@@ -147,8 +147,7 @@ function createChatSocket (userId, channelId, endpoints, authkey) {
 }
 
 function generateArray(fileName) {
-    let arr = fs.readFileSync(fileName).toString().split('\n');
-    return arr;
+    return fs.readFileSync(fileName).toString().split('\n');
 }
 
 function randomLine(arr) {
