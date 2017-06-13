@@ -53,6 +53,17 @@ function createChatSocket (userId, channelId, endpoints, authkey) {
         console.log(data);
     });
 
+
+    ca.subscribe(`channel:${channelId}:hosted`, data => {
+        socket.call('msg', )[`@${data.user.username} began hosting our channel! Thanks!`]);
+        console.log(data);
+    });
+    ca.subscribe(`channel:${channelId}:subscribed`, data => {
+        socket.call('msg', )[`@${data.user.username} subscribed!`]);
+    console.log(data);
+});
+
+
     // Greet a joined user
     socket.on('UserJoin', data => {
         socket.call('msg', [`Hi ${data.username}! I'm pingbot! Write !ping and I will pong back!`])
