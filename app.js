@@ -49,19 +49,18 @@ function createChatSocket (userId, channelId, endpoints, authkey) {
     const socket = new XSocket(endpoints).boot();
 
     ca.subscribe(`channel:${channelId}:followed`, data => {
-        socket.call('msg', [`@${data.user.username} followed!`]);
-        console.log(data);
+        if (data.following) {
+            socket.call('msg', [`@${data.user.username} followed!`]);
+        }
     });
-
 
     ca.subscribe(`channel:${channelId}:hosted`, data => {
-        socket.call('msg', )[`@${data.user.username} began hosting our channel! Thanks!`]);
-        console.log(data);
+        socket.call('msg', [`@${data.user.username} began hosting our channel! Thanks!`]);
     });
+
     ca.subscribe(`channel:${channelId}:subscribed`, data => {
-        socket.call('msg', )[`@${data.user.username} subscribed!`]);
-    console.log(data);
-});
+        socket.call('msg', [`@${data.user.username} subscribed!`]);
+    });
 
 
     // Greet a joined user
