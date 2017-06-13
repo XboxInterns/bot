@@ -45,7 +45,7 @@ function createChatSocket (userId, channelId, endpoints, authkey) {
 
   // Greet a joined user
   socket.on('UserJoin', data => {
-    socket.call('msg', [`Hi ${data.username}! I'm pingbot! Write !ping and I will pong back!`])
+    //socket.call('msg', [`Hi ${data.username}! I'm InternXBot!`]) //we should take this out at some point
   })
 
   // React to our !pong command
@@ -121,9 +121,9 @@ function createChatSocket (userId, channelId, endpoints, authkey) {
     if(input[0] == '!dadjoke') {
       if (!jokes) {
         jokes = generateArray('./dadjokes.txt');
-      } else {
-          socket.call('msg', [`@${data.user_name} ${randomLine(jokes)}`])
       }
+          socket.call('msg', [`@${data.user_name} ${randomLine(jokes)}`])
+
     }
 
     if(input[0] == '!q') {
