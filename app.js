@@ -4,7 +4,7 @@ var fs = require('fs');
 let userInfo
 var qSet = new Set();
 const client = new XClient()
-
+var jokes = generateArray('/Users/t-anpark/Desktop/bot/dadjokes.txt');
 // With OAuth we don't need to login, the OAuth Provider will attach
 // the required information to all of our requests after this call.
 client.use('oauth', {
@@ -50,6 +50,7 @@ function createChatSocket (userId, channelId, endpoints, authkey) {
 
   // React to our !pong command
   socket.on('ChatMessage', data => {
+
     // input is an array of the strings given by user, seperated by spaces
     var input = data.message.message[0].data.split(' ')
     // console.log(input[0]);
@@ -85,8 +86,7 @@ function createChatSocket (userId, channelId, endpoints, authkey) {
     }
 
     if(input[0] == '!dadjoke') {
-      randomLine('/Users/t-tabajp/Documents/GitHub/bot/dadjokes.txt') //change this according to your machine
-      socket.call('msg', [`@${data.user_name} ${line}`])
+      socket.call('msg', [`@${data.user_name} ${randomLine(jokes)}`])
     }
 
     if(input[0] == '!q') {
@@ -108,14 +108,19 @@ function createChatSocket (userId, channelId, endpoints, authkey) {
     })
 }
 
-var line;
-function randomLine(fileName) {
+function generateArray(fileName) {
+  var arr;
   fs.readFile(fileName, function(err, data) {
     if (err) throw err;
     data += ' '
-    var lines = data.split('\n')
-    line = lines[Math.floor(Math.random()*lines.length)];
-  })
+    arr = data.split('\n')
+  });
+  return arr;
+}
+
+function randomLine(arr) {
+    line = arr[Math.floor(Math.random()*arr.length)];
+    return line;
 }
 
 function getQuestions() {
