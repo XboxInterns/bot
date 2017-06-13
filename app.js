@@ -65,7 +65,7 @@ function createChatSocket (userId, channelId, endpoints, authkey) {
 
     // Greet a joined user
     socket.on('UserJoin', data => {
-        socket.call('msg', [`Hi ${data.username}! I'm pingbot! Write !ping and I will pong back!`])
+        socket.call('msg', [`Hi ${data.username}! I'm InternXBot!`])
     });
 
     // React to our !pong command
