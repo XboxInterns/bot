@@ -4,7 +4,7 @@ var fs = require('fs');
 let userInfo
 var qSet = new Set();
 const client = new XClient()
-var jokes = generateArray('./dadjokes.txt');
+var jokes;
 // With OAuth we don't need to login, the OAuth Provider will attach
 // the required information to all of our requests after this call.
 client.use('oauth', {
@@ -86,7 +86,11 @@ function createChatSocket (userId, channelId, endpoints, authkey) {
     }
 
     if(input[0] == '!dadjoke') {
-      socket.call('msg', [`@${data.user_name} ${randomLine(jokes)}`])
+      if (!jokes) {
+        jokes = generateArray('./dadjokes.txt');
+      } else {
+          socket.call('msg', [`@${data.user_name} ${randomLine(jokes)}`])
+      }
     }
 
     if(input[0] == '!q') {
