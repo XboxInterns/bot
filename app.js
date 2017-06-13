@@ -4,7 +4,8 @@ var fs = require('fs');
 let userInfo
 var qSet = new Set();
 const client = new XClient()
-var jokes = generateArray('/Users/t-anpark/Desktop/bot/dadjokes.txt');
+var jokes;
+generateArray('./dadjoke');
 // With OAuth we don't need to login, the OAuth Provider will attach
 // the required information to all of our requests after this call.
 client.use('oauth', {
@@ -109,13 +110,11 @@ function createChatSocket (userId, channelId, endpoints, authkey) {
 }
 
 function generateArray(fileName) {
-  var arr;
   fs.readFile(fileName, function(err, data) {
     if (err) throw err;
     data += ' '
-    arr = data.split('\n')
-  });
-  return arr;
+    jokes = data.split('\n')
+  })
 }
 
 function randomLine(arr) {
