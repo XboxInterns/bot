@@ -1,5 +1,10 @@
 const XClient = require('beam-client-node');
 const XSocket = require('beam-client-node/lib/ws');
+const Carina = require('carina').Carina;
+const ws = require('ws');
+Carina.WebSocket = ws;
+const ca = new Carina({ isBot: true }).open();
+const channelId = 6772196;
 let fs = require("fs");
 let userInfo;
 let qSet = new Set();
@@ -20,12 +25,12 @@ client.request('GET', `users/current`)
         userInfo = response.body;
         //before: response.userInfo.channelId
         //now: hardcoded xboxinterns channelId
-        return client.chat.join(6772196)
+        return client.chat.join(channelId)
     })
     .then(response => {
         const body = response.body;
         //channel id has to be xboxinterns - hardcoded
-        return createChatSocket(userInfo.id, 6772196, body.endpoints, body.authkey)
+        return createChatSocket(userInfo.id, channelId, body.endpoints, body.authkey)
     })
     .catch(error => {
         console.log('Something went wrong:', error)
@@ -42,6 +47,11 @@ client.request('GET', `users/current`)
 function createChatSocket (userId, channelId, endpoints, authkey) {
     // Chat connection
     const socket = new XSocket(endpoints).boot();
+
+    ca.subscribe(`channel:${channelId}:followed`, data => {
+        socket.call('msg', [`@${data.user.username} followed!`]);
+        console.log(data);
+    });
 
     // Greet a joined user
     socket.on('UserJoin', data => {
