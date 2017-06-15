@@ -65,7 +65,7 @@ function createChatSocket (userId, channelId, endpoints, authkey) {
 
     // Greet a joined user
     socket.on('UserJoin', data => {
-        socket.call('msg', [`Hi ${data.username}! I'm InternXBot!`])
+        socket.call('msg', [`@${data.username} has joined the stream!`])
     });
 
     // React to our !pong command
@@ -118,33 +118,14 @@ function createChatSocket (userId, channelId, endpoints, authkey) {
         if(opt === '!dieroll') {
             //socket.call('msg', [`@${data.user_name} rolls a die...`])
             let n = Math.floor(Math.random() * 6) + 1;
-            if (n === 1) {
-                socket.call('msg', [`@${data.user_name} rolls a die... The result of the die roll is: 1`])
-            } else if(n === 2) {
-                socket.call('msg', [`@${data.user_name} rolls a die... The result of the die roll is: 2`])
-            }
-            else if(n === 3) {
-                socket.call('msg', [`@${data.user_name} rolls a die... The result of the die roll is: 3`])
-            }
-            else if(n === 4) {
-                socket.call('msg', [`@${data.user_name} rolls a die... The result of the die roll is: 4`])
-            }
-            else if(n === 5) {
-                socket.call('msg', [`@${data.user_name} rolls a die... The result of the die roll is: 5`])
-            }
-            else if(n === 6) {
-                socket.call('msg', [`@${data.user_name} rolls a die... The result of the die roll is: 6`])
-            }
-
+            socket.call('msg', [`@${data.user_name} rolls a die... The result of the die roll is: ${n}`])
         }
 
         if(opt === '!dadjoke') {
             if (!jokes) {
                 jokes = generateArray('./dadjokes.txt');
-                socket.call('msg', [`@${data.user_name} ${randomLine(jokes)}`])
-            } else {
-                socket.call('msg', [`@${data.user_name} ${randomLine(jokes)}`])
             }
+            socket.call('msg', [`@${data.user_name} ${randomLine(jokes)}`])
         }
 
         if(opt === '!q') {
@@ -162,7 +143,7 @@ function createChatSocket (userId, channelId, endpoints, authkey) {
     return socket.auth(channelId, userId, authkey)
         .then(() => {
             console.log('Login successful')
-            return socket.call('msg', ['Hi! I\'m InterXBot, Write !commandlist to see my full list of commands!'])
+            return socket.call('msg', ['Hi! I\'m InternXBot, Write !commandlist to see my full list of commands!'])
         })
 }
 
