@@ -1,0 +1,4 @@
+!about='Hey! We're three Xbox Interns - Andy, Dani, and Tanvi! We're new to Mixer and to PUBG. Check !rules to see what the rules of our chat are :) and !commandlist to see InternXBot's list of commands!
+!rules=1. Be nice. No profanity. If you don't follow 1 & 2 we can fire you (ban you) from the stream. Be chill fam
+!commandlist=Here's a list of my current commands: !what, !rules, !twitter, !ping, !dadjoke, !spin - Check back for more!
+!twitter=Follow the interns on twitter: twitter.com/xboxinterns Follow our bots at twitter.com/MixerInternBot !

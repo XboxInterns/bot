@@ -6,10 +6,12 @@ Carina.WebSocket = ws;
 const ca = new Carina({ isBot: true }).open();
 const channelId = 6772196;
 let fs = require("fs");
+const readline = require("readline");
 let userInfo;
 let qSet = new Set();
 const client = new XClient();
 let jokes;
+let commands;
 // With OAuth we don't need to login, the OAuth Provider will attach
 // the required information to all of our requests after this call.
 client.use('oauth', {
@@ -73,23 +75,29 @@ function createChatSocket (userId, channelId, endpoints, authkey) {
         // input is an array of the strings given by user, seperated by spaces
         let input = data.message.message[0].data.split(' ');
         let opt = input[0].toLowerCase();
+        if (!commands) {
+            commands = new Array;
+            generateCommandsMap('./commands.txt');
+        }
+
+        if (commands[opt]) {
+            socket.call('msg', [commands[opt]]);
+            console.log(commands[opt]);
+        }
+
+        if (opt === '!create' && input[1] && input[2]) {
+            if (!commands[input[1]]) {
+                commands[input[1]] = input[2];
+                fs.appendFile('./commands.txt', `\r${input[1]}+${input[2]}`, function(err) {
+                    if (err) return console.log(err);
+                });
+            }
+        }
+
         // console.log(input[0]);
         if (opt === '!ping') {
             socket.call('msg', [`@${data.user_name} PONG!`]);
             console.log(`Ponged ${data.user_name}`)
-        }
-        if(opt === '!what') {
-            socket.call('msg', ['Hey! We\'re three Xbox Interns - Andy, Dani, and Tanvi! We\'re new to Mixer and to PUBG. Check !rules to see what the rules of our chat are :) and !commandlist to see InternXBot\'s list of commands!'])
-        }
-        if(opt === '!rules') {
-            socket.call('msg', ['1. Be nice \n2. No profanity \n3. If you don\'t follow 1 & 2 we can fire you (ban you) from the stream. \n4. Be chill fam'])
-        }
-
-        if(opt === '!commandlist') {
-            socket.call('msg', ['Here\'s a list of my current commands: !what, !rules, !twitter, !ping, !dadjoke, !spin - Check back for more!'])
-        }
-        if(opt === '!twitter') {
-            socket.call('msg',['Follow the interns on twitter: twitter.com/xboxinterns Follow our bots at twitter.com/MixerInternBot !'])
         }
 
         if (opt === '!spin' && isNaN(input[1])) {
@@ -168,6 +176,13 @@ function createChatSocket (userId, channelId, endpoints, authkey) {
 
 function generateArray(fileName) {
     return fs.readFileSync(fileName).toString().split('\n');
+}
+
+function generateCommandsMap(fileName) {
+    fs.readFileSync(fileName).toString().split('\r\n').forEach(function(line){
+        var temp = line.split('=');
+        commands[temp[0]] = temp[1];
+    });
 }
 
 function randomLine(arr) {
