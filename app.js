@@ -75,7 +75,7 @@ function createChatSocket (userId, channelId, endpoints, authkey) {
     let opt = input[0].toLowerCase();
 
     if (!commands) {
-      commands = [];
+      commands = {'!dadjoke': 'dadjoke', '!spin': 'spin', '!dieroll': 'dieroll', '!coinflip': 'coinflip', '!q': 'q', '!create': 'create'};
       generateCommandsMap('./commands.txt');
     }
 
