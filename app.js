@@ -6,7 +6,6 @@ Carina.WebSocket = ws;
 const ca = new Carina({isBot: true}).open();
 const channelId = 6772196;
 let fs = require('fs');
-const readline = require('readline');
 let userInfo;
 let qSet = new Set();
 const client = new XClient();
@@ -19,7 +18,7 @@ client.use('oauth', {
     access: 'kn7IfCBlsHASvATqRwhkap2y82cpKO2nSNBVMBl5ww5XfCb2KjlNDEGdgFR2vGe0',
     expires: Date.now() + (365 * 24 * 60 * 60 * 1000)
   },
-})
+});
 
 // Get's the user we have access to with the token
 client.request('GET', `users/current`)
@@ -30,13 +29,13 @@ client.request('GET', `users/current`)
     return client.chat.join(channelId);
   })
   .then(response => {
-    const body = response.body
+    const body = response.body;
     //channel id has to be xboxinterns - hardcoded
     return createChatSocket(userInfo.id, channelId, body.endpoints, body.authkey)
   })
   .catch(error => {
     console.log('Something went wrong:', error);
-  })
+  });
 
 /**
  * Creates a beam chat socket and sets up listeners to various chat events.
@@ -54,15 +53,15 @@ function createChatSocket (userId, channelId, endpoints, authkey) {
     if (data.following) {
       socket.call('msg', [`@${data.user.username} followed!`]);
     }
-  })
+  });
 
   ca.subscribe(`channel:${channelId}:hosted`, data => {
     socket.call('msg', [`@${data.user.username} began hosting our channel! Thanks!`]);
-  })
+  });
 
   ca.subscribe(`channel:${channelId}:subscribed`, data => {
     socket.call('msg', [`@${data.user.username} subscribed!`]);
-  })
+  });
 
   // Greet a joined user
   // socket.on('UserJoin', data => {
@@ -76,12 +75,12 @@ function createChatSocket (userId, channelId, endpoints, authkey) {
     let opt = input[0].toLowerCase();
 
     if (!commands) {
-      commands = new Array;
+      commands = [];
       generateCommandsMap('./commands.txt');
     }
 
     if (commands[opt]) {
-      socket.call('msg', [commands[opt]])
+      socket.call('msg', [commands[opt]]);
       console.log(commands[opt]);
     }
 
@@ -141,12 +140,12 @@ function createChatSocket (userId, channelId, endpoints, authkey) {
       qSet.add(data.message.message[0].data);
       // getQuestions() // !!! delete this since it'll repeatedly print the questions
     }
-  })
+  });
 
   // Handle errors
   socket.on('error', error => {
     console.error('Socket error', error);
-  })
+  });
 
   return socket.auth(channelId, userId, authkey)
     .then(() => {
@@ -161,7 +160,7 @@ function generateArray (fileName) {
 
 function generateCommandsMap (fileName) {
   fs.readFileSync(fileName).toString().split('\r\n').forEach(function (line) {
-    var temp = line.split('=');
+    let temp = line.split('=');
     commands[temp[0]] = temp[1];
   })
 }
