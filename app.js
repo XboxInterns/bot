@@ -90,18 +90,22 @@ function createChatSocket(userId, channelId, endpoints, authkey) {
         switch (opt) {
             case '!create':
                 if (input[1] && input[2]) {
-                    let str = '';
-                    for (var i = 2; i < input.length; i++) {
-                        str += input[i];
-                        if (i !== input.length - 1) {
-                            str += " ";
-                        }
-                    }
+                    let str = data.message.message[0].data.split(input[1]).pop();
+                    // for (var i = 2; i < input.length; i++) {
+                    //     str += input[i];
+                    //     if (i !== input.length - 1) {
+                    //         str += " ";
+                    //     }
+                    // }
                     if ((data.user_roles.includes('Mod') || data.user_roles.includes('Owner')) && !commands[input[1]]) {
-                        commands[input[1]] = str;
+                        if (input[1].substr(0,1) !== '!') {
+                          input[1] = '!' + input[1];
+                        }
+                      commands[input[1]] = str;
                         fs.appendFile('./commands.txt', `\r${input[1]}+${str}`, function (err) {
                             if (err) return console.log(err);
                         })
+                      ret = 'your command ' + input[1] + ' was created!';
                     }
                 }
                 break;
