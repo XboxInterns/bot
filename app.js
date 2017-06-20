@@ -173,10 +173,11 @@ function generateArray(fileName) {
 }
 
 function generateCommandsMap(fileName) {
-    fs.readFileSync(fileName).toString().split('\r\n').forEach(function (line) {
+    fs.readFileSync(fileName).toString().split('\r').forEach(function (line) {
         let temp = line.split('=');
         commands[temp[0]] = temp[1];
-    })
+    });
+    console.log(commands);
 }
 
 function randomLine(arr) {
