@@ -85,15 +85,14 @@ function createChatSocket (userId, channelId, endpoints, authkey) {
     }
 
     if (opt === '!create' && input[1] && input[2]) {
-      if (!commands[input[1]]) {
+      console.log(data);
+      if ((data.user_roles.includes('Mod') || data.user_roles.includes('Owner')) && !commands[input[1]]) {
         commands[input[1]] = input[2];
         fs.appendFile('./commands.txt', `\r${input[1]}+${input[2]}`, function (err) {
           if (err) return console.log(err);
         })
       }
     }
-
-
 
     let ret;
     switch (opt) {
@@ -131,7 +130,7 @@ function createChatSocket (userId, channelId, endpoints, authkey) {
         ret = randomLine(jokes);
         break;
     }
-    if (ret !== '') {
+    if (ret) {
       socket.call('msg', [`@${data.user_name} ${ret}`]);
     }
 
