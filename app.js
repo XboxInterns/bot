@@ -66,15 +66,16 @@ function createChatSocket (userId, channelId, endpoints, authkey) {
 
 
     // Greet a joined user
-    socket.on('UserJoin', data => {
-        socket.call('msg', [`Hi ${data.username}! I'm InternXBot!`])
-    });
+    // socket.on('UserJoin', data => {
+    //     socket.call('msg', [`@${data.username} has joined the stream!`])
+    // });
 
     // React to our !pong command
     socket.on('ChatMessage', data => {
         // input is an array of the strings given by user, seperated by spaces
         let input = data.message.message[0].data.split(' ');
         let opt = input[0].toLowerCase();
+
         if (!commands) {
             commands = new Array;
             generateCommandsMap('./commands.txt');
@@ -104,56 +105,47 @@ function createChatSocket (userId, channelId, endpoints, authkey) {
             socket.call('msg', [`@${data.user_name} please enter a valid number`])
         }
 
-        if (opt === '!spin' && !isNaN(input[1])) {
-            // result = a number between -input[1] and +input[1]
+      let ret;
+      switch (opt) {
+
+        case '!spin':
+          if (isNaN(input[1])) {
+            ret = 'please enter a valid number'
+          } else {
             if (Math.random() > Math.random()) {
-                let winnings = (Math.random() *  parseInt(input[1])) + parseInt(input[1]);
-                socket.call('msg', [`@${data.user_name} won ${Math.round(winnings)} points!`]);
+              let winnings = Math.round((Math.random() *  parseInt(input[1])) + parseInt(input[1]));
+              ret = 'won ' + winnings + ' points!';
             } else {
-                socket.call('msg', [`@${data.user_name} lost the spin...`])
+              ret = 'lost the spin...';
             }
-        }
+          }
+          break;
 
-        if(opt === '!coinflip') {
-            // socket.call('msg', [`@${data.user_name} flips a coin...`])
+        case '!coinflip':
+          if (input[1].toLowerCase() !== 'heads' || input[1].toLowerCase() !== 'tails') {
+            ret = 'please enter "heads" or "tails"'
+          } else {
             if (Math.random() > 0.5) {
-                socket.call('msg', [`@${data.user_name} flips a coin... The result of the coin flip is: HEADS!`])
+              ret = 'HEADS!'
             } else {
-                socket.call('msg', [`@${data.user_name} flips a coin... The result of the coin flip is: TAILS!`])
+              ret = 'TAILS!'
             }
-        }
+            ret = 'flips a coin... The result of the coin flip is: ' + ret;
+          }
+          break;
 
-        if(opt === '!dieroll') {
-            //socket.call('msg', [`@${data.user_name} rolls a die...`])
-            let n = Math.floor(Math.random() * 6) + 1;
-            if (n === 1) {
-                socket.call('msg', [`@${data.user_name} rolls a die... The result of the die roll is: 1`])
-            } else if(n === 2) {
-                socket.call('msg', [`@${data.user_name} rolls a die... The result of the die roll is: 2`])
-            }
-            else if(n === 3) {
-                socket.call('msg', [`@${data.user_name} rolls a die... The result of the die roll is: 3`])
-            }
-            else if(n === 4) {
-                socket.call('msg', [`@${data.user_name} rolls a die... The result of the die roll is: 4`])
-            }
-            else if(n === 5) {
-                socket.call('msg', [`@${data.user_name} rolls a die... The result of the die roll is: 5`])
-            }
-            else if(n === 6) {
-                socket.call('msg', [`@${data.user_name} rolls a die... The result of the die roll is: 6`])
-            }
+        case '!dieroll':
+          ret = 'rolls a die... The result of the die roll is: ' + Math.floor(Math.random() * 6) + 1;
+          break;
 
-        }
-
-        if(opt === '!dadjoke') {
-            if (!jokes) {
-                jokes = generateArray('./dadjokes.txt');
-                socket.call('msg', [`@${data.user_name} ${randomLine(jokes)}`])
-            } else {
-                socket.call('msg', [`@${data.user_name} ${randomLine(jokes)}`])
-            }
-        }
+        case '!dadjoke':
+          if (!jokes) {
+            jokes = generateArray('./dadjokes.txt');
+          }
+          ret = randomLine(jokes);
+          socket.call('msg', [`@${data.user.username} ${ret}`]);
+          break;
+      }
 
         if(opt === '!q') {
             // below pushes the entire message including the '!q'
@@ -169,8 +161,8 @@ function createChatSocket (userId, channelId, endpoints, authkey) {
 
     return socket.auth(channelId, userId, authkey)
         .then(() => {
-            console.log('Login successful')
-            return socket.call('msg', ['Hi! I\'m InterXBot, Write !commandlist to see my full list of commands!'])
+            console.log('Login successful');
+            return socket.call('msg', ['Hi! I\'m InternXBot, Write !commandlist to see my full list of commands!'])
         })
 }
 
@@ -196,3 +188,4 @@ function getQuestions() {
         console.log(i);
     }
 }
+
