@@ -97,10 +97,9 @@ function createChatSocket(userId, channelId, endpoints, authkey) {
                             str += " ";
                         }
                     }
-                    console.log(data);
                     if ((data.user_roles.includes('Mod') || data.user_roles.includes('Owner')) && !commands[input[1]]) {
-                        commands[input[1]] = input[2];
-                        fs.appendFile('./commands.txt', `\r${input[1]}+${input[2]}`, function (err) {
+                        commands[input[1]] = str;
+                        fs.appendFile('./commands.txt', `\r${input[1]}+${str}`, function (err) {
                             if (err) return console.log(err);
                         })
                     }
