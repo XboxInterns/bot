@@ -64,9 +64,9 @@ function createChatSocket (userId, channelId, endpoints, authkey) {
 
 
     // Greet a joined user
-    socket.on('UserJoin', data => {
-        socket.call('msg', [`@${data.username} has joined the stream!`])
-    });
+    // socket.on('UserJoin', data => {
+    //     socket.call('msg', [`@${data.username} has joined the stream!`])
+    // });
 
     // React to our !pong command
     socket.on('ChatMessage', data => {
@@ -74,59 +74,56 @@ function createChatSocket (userId, channelId, endpoints, authkey) {
         let input = data.message.message[0].data.split(' ');
         let opt = input[0].toLowerCase();
         // console.log(input[0]);
-        if (opt === '!ping') {
-            socket.call('msg', [`@${data.user_name} PONG!`]);
-            console.log(`Ponged ${data.user_name}`)
-        }
-        if(opt === '!what') {
-            socket.call('msg', ['Hey! We\'re three Xbox Interns - Andy, Dani, and Tanvi! We\'re new to Mixer and to PUBG. Check !rules to see what the rules of our chat are :) and !commandlist to see InternXBot\'s list of commands!'])
-        }
-        if(opt === '!rules') {
-            socket.call('msg', ['1. Be nice \n2. No profanity \n3. If you don\'t follow 1 & 2 we can fire you (ban you) from the stream. \n4. Be chill fam'])
-        }
 
-        if(opt === '!commandlist') {
-            socket.call('msg', ['Here\'s a list of my current commands: !what, !rules, !twitter, !ping, !dadjoke, !spin - Check back for more!'])
-        }
-        if(opt === '!twitter') {
-            socket.call('msg',['Follow the interns on twitter: twitter.com/xboxinterns Follow our bots at twitter.com/MixerInternBot !'])
-        }
+      switch (opt) {
+        case '!about':
+          socket.call('msg', ['Hey! We\'re three Xbox Interns - Andy, Dani, and Tanvi! We\'re new to Mixer and to PUBG. Check !rules to see what the rules of our chat are :) and !commandlist to see InternXBot\'s list of commands!'])
+        case '!rules':
+          socket.call('msg', ['1. Be nice \n2. No profanity \n3. If you don\'t follow 1 & 2 we can fire you (ban you) from the stream. \n4. Be chill fam']);
+          case '!commandlist':
+            socket.call('msg', ['Here\'s a list of my current commands: !what, !rules, !twitter, !ping, !dadjoke, !spin - Check back for more!']);
+        case '!twitter':
+          socket.call('msg',['Follow the interns on twitter: twitter.com/xboxinterns Follow our bots at twitter.com/MixerInternBot !']);
+      }
+      let ret;
+      switch (opt) {
 
-        if (opt === '!spin' && isNaN(input[1])) {
-            socket.call('msg', [`@${data.user_name} please enter a valid number`])
-        }
-
-        if (opt === '!spin' && !isNaN(input[1])) {
-            // result = a number between -input[1] and +input[1]
+        case '!spin':
+          if (isNaN(input[1])) {
+            ret = 'please enter a valid number'
+          } else {
             if (Math.random() > Math.random()) {
-                let winnings = (Math.random() *  parseInt(input[1])) + parseInt(input[1]);
-                socket.call('msg', [`@${data.user_name} won ${Math.round(winnings)} points!`]);
+              let winnings = Math.round((Math.random() *  parseInt(input[1])) + parseInt(input[1]));
+              ret = 'won ' + winnings + ' points!';
             } else {
-                socket.call('msg', [`@${data.user_name} lost the spin...`])
+              ret = 'lost the spin...';
             }
-        }
+          }
 
-        if(opt === '!coinflip') {
-            // socket.call('msg', [`@${data.user_name} flips a coin...`])
+        case '!coinflip':
+          if (input[1].toLowerCase() !== 'heads' || input[1].toLowerCase() !== 'tails') {
+            ret = 'please enter "heads" or "tails"'
+          } else {
             if (Math.random() > 0.5) {
-                socket.call('msg', [`@${data.user_name} flips a coin... The result of the coin flip is: HEADS!`])
+              ret = 'HEADS!'
             } else {
-                socket.call('msg', [`@${data.user_name} flips a coin... The result of the coin flip is: TAILS!`])
+              ret = 'TAILS!'
             }
-        }
+            ret = 'flips a coin... The result of the coin flip is: ' + ret;
+          }
 
-        if(opt === '!dieroll') {
-            //socket.call('msg', [`@${data.user_name} rolls a die...`])
-            let n = Math.floor(Math.random() * 6) + 1;
-            socket.call('msg', [`@${data.user_name} rolls a die... The result of the die roll is: ${n}`])
-        }
+        case '!dieroll':
+          ret = 'rolls a die... The result of the die roll is: ' + Math.floor(Math.random() * 6) + 1;
 
-        if(opt === '!dadjoke') {
-            if (!jokes) {
-                jokes = generateArray('./dadjokes.txt');
-            }
-            socket.call('msg', [`@${data.user_name} ${randomLine(jokes)}`])
-        }
+        case '!dadjoke':
+          if (!jokes) {
+            jokes = generateArray('./dadjokes.txt');
+          }
+          ret = randomLine(jokes);
+
+
+          socket.call('msg', [`@${data.user.username} ${ret}`]);
+      }
 
         if(opt === '!q') {
             // below pushes the entire message including the '!q'
@@ -162,3 +159,4 @@ function getQuestions() {
         console.log(i);
     }
 }
+
