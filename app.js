@@ -4,10 +4,11 @@ const Carina = require('carina').Carina;
 const ws = require('ws');
 Carina.WebSocket = ws;
 const ca = new Carina({isBot: true}).open();
-const channelId = 6725743;
+const channelId = 6772196;  //6772196 --> xbox    //6725743 --> andy's for testing
 let fs = require('fs');
 let userInfo;
 let qSet = new Set();
+let followers = new Set();
 const client = new XClient();
 let jokes;
 let commands;
@@ -51,8 +52,9 @@ function createChatSocket(userId, channelId, endpoints, authkey) {
     const socket = new XSocket(endpoints).boot();
 
     ca.subscribe(`channel:${channelId}:followed`, data => {
-        if (data.following) {
-            socket.call('msg', [`@${data.user.username} followed!`]);
+        if (data.following && !followers.has(data.user.username)) {
+          followers.add(data.user.username);
+            socket.call('msg', [`@${data.user.username} followed XboxInterns!`]);
         }
     });
 
@@ -83,7 +85,7 @@ function createChatSocket(userId, channelId, endpoints, authkey) {
                 '!coinflip': 'coinflip',
                 '!q': 'q',
                 '!create': 'create',
-                '!commandlist': 'commandlist'
+                '!commands': 'commands'
             };
             generateCommandsMap('./commands.txt');
         }
@@ -141,7 +143,7 @@ function createChatSocket(userId, channelId, endpoints, authkey) {
                 }
                 ret = randomLine(jokes);
                 break;
-            case '!commandlist':
+            case '!commands':
                 ret = 'The current commands are ' + commandNm + 'check back for more!';
             case '!q':
                 qSet.add(data.message.message[0].data);
@@ -167,14 +169,20 @@ function createChatSocket(userId, channelId, endpoints, authkey) {
     return socket.auth(channelId, userId, authkey)
         .then(() => {
             console.log('Login successful');
-            return socket.call('msg', ['Hi! I\'m InternXBot, Write !commandlist to see my full list of commands!']);
+            return socket.call('msg', ['Hey! I\'m InternXBot, Write !commands to see my full list of commands!']);
         })
+}
+
+setTimeout(function(){ clearCache }, 3600000);
+
+function clearCache() {
+  followers.clear();
 }
 
 function updateCommands() {
 commandNm = '';
   for (var i in commands) {
-    if (i !== '!commandlist') {
+    if (i !== '!commands') {
       commandNm += i + ', ';
     }
   }
