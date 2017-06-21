@@ -4,13 +4,14 @@ const Carina = require('carina').Carina;
 const ws = require('ws');
 Carina.WebSocket = ws;
 const ca = new Carina({isBot: true}).open();
-const channelId = 6772196;
+const channelId = 6725743;
 let fs = require('fs');
 let userInfo;
 let qSet = new Set();
 const client = new XClient();
 let jokes;
 let commands;
+let commandNm;
 // With OAuth we don't need to login, the OAuth Provider will attach
 // the required information to all of our requests after this call.
 client.use('oauth', {
@@ -81,22 +82,19 @@ function createChatSocket(userId, channelId, endpoints, authkey) {
                 '!dieroll': 'dieroll',
                 '!coinflip': 'coinflip',
                 '!q': 'q',
-                '!create': 'create'
+                '!create': 'create',
+                '!commandlist': 'commandlist'
             };
             generateCommandsMap('./commands.txt');
         }
+
+        updateCommands();
 
         let ret;
         switch (opt) {
             case '!create':
                 if (input[1] && input[2]) {
                     let str = data.message.message[0].data.split(input[1]).pop();
-                    // for (var i = 2; i < input.length; i++) {
-                    //     str += input[i];
-                    //     if (i !== input.length - 1) {
-                    //         str += " ";
-                    //     }
-                    // }
                     if ((data.user_roles.includes('Mod') || data.user_roles.includes('Owner')) && !commands[input[1]]) {
                         if (input[1].substr(0,1) !== '!') {
                           input[1] = '!' + input[1];
@@ -106,6 +104,7 @@ function createChatSocket(userId, channelId, endpoints, authkey) {
                             if (err) return console.log(err);
                         })
                       ret = 'your command ' + input[1] + ' was created!';
+                        updateCommands();
                     }
                 }
                 break;
@@ -142,10 +141,10 @@ function createChatSocket(userId, channelId, endpoints, authkey) {
                 }
                 ret = randomLine(jokes);
                 break;
+            case '!commandlist':
+                ret = 'The current commands are ' + commandNm + 'check back for more!';
             case '!q':
-                // below pushes the entire message including the '!q'
                 qSet.add(data.message.message[0].data);
-                // getQuestions() // !!! delete this since it'll repeatedly print the questions
                 break;
             default:
                 if (commands[opt]) {
@@ -170,6 +169,15 @@ function createChatSocket(userId, channelId, endpoints, authkey) {
             console.log('Login successful');
             return socket.call('msg', ['Hi! I\'m InternXBot, Write !commandlist to see my full list of commands!']);
         })
+}
+
+function updateCommands() {
+commandNm = '';
+  for (var i in commands) {
+    if (i !== '!commandlist') {
+      commandNm += i + ', ';
+    }
+  }
 }
 
 function generateArray(fileName) {
